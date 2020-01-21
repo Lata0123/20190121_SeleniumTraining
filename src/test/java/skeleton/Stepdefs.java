@@ -17,14 +17,11 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.cucumber.datatable.DataTable;
 
-
-
 public class Stepdefs {
 
-
-
 	private WebDriver driver;
-	static int numberOfProducts; 
+	static int numberOfProducts;
+
 	@Given("Alex is on the login page")
 	public void alex_is_on_the_login_page() {
 		System.setProperty("webdriver.chrome.driver", "C:\\driver\\chromedriver.exe");
@@ -32,7 +29,7 @@ public class Stepdefs {
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
 		driver.get("http://10.232.237.143:443/TestMeApp/login.htm");
-		
+
 	}
 
 	@When("Alex enters correct credentials")
@@ -41,8 +38,6 @@ public class Stepdefs {
 		driver.findElement(By.name("password")).sendKeys("Password123");
 		driver.findElement(By.name("Login")).click();
 	}
-
-
 
 	@When("Alex enters username {string}")
 	public void alex_enters_username(String username) {
@@ -66,7 +61,6 @@ public class Stepdefs {
 
 	}
 
-
 	@When("user searches the below product:")
 	public void user_searches_the_below_product(DataTable productsName) {
 		driver.findElement(By.name("userName")).sendKeys("Lalitha");
@@ -74,32 +68,27 @@ public class Stepdefs {
 		driver.findElement(By.name("Login")).click();
 		List<String> products = productsName.asList();
 
-		for(String eachProduct : products){
+		for (String eachProduct : products) {
 			driver.findElement(By.id("myInput")).sendKeys(eachProduct);
 			driver.findElement(By.xpath("/html/body/div[1]/form/input")).click();
 
-			try{
+			try {
 				driver.findElement(By.linkText("Add to cart")).click();
-				numberOfProducts++;	
-			}catch(NoSuchElementException|StaleElementReferenceException  e){
+				numberOfProducts++;
+			} catch (NoSuchElementException | StaleElementReferenceException e) {
 
 			}
 			driver.findElement(By.linkText("Home")).click();
 		}
 	}
+
 	@Then("available products should be added to cart")
 	public void available_products_should_be_added_to_cart() {
 
-		WebElement  countofProducts =driver.findElement(By.xpath("//*[@id='header']/div[1]/div/div/div[2]/div/a[2]/b"));
+		WebElement countofProducts = driver.findElement(By.xpath("//*[@id='header']/div[1]/div/div/div[2]/div/a[2]/b"));
 		String countProducts = countofProducts.getText();
-		int  countProductsInInt = Integer.parseInt(countProducts);
+		int countProductsInInt = Integer.parseInt(countProducts);
 		Assert.assertEquals(numberOfProducts, countProductsInInt);
 	}
-
-
-
-
-
-
 
 }
